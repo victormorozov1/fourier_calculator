@@ -21,6 +21,10 @@ class SystemObject(ABC):
     def __mul__(self, other) -> int | float:
         pass
 
+    @abstractmethod
+    def __add__(self, other):
+        pass
+
     def norm(self):
         # По умолчанию норма будет выводится из произведения, но при желании ее можно определить как угодно
         return sqrt(self * self)
@@ -43,6 +47,12 @@ class System(Generic[SystemObjectType]):
         base_obj = self.base_system[n]
         return (obj * base_obj) / (base_obj * base_obj)
 
+    def fourier_sum(self, obj: SystemObjectType, n: int) -> SystemObjectType:
+        summ = self.base_system[0] * self.fourier_coefficient(obj, 0)
+        for i in range(1, n):
+            summ = summ + self.base_system[i] * self.fourier_coefficient(obj, i)
+        return summ
+
 
 class ClosedIntervalFunc(SystemObject, ABC):
     @property
@@ -64,8 +74,20 @@ class ClosedIntervalFunc(SystemObject, ABC):
     def __init__(self, func):
         self.func = func
 
-    def __mul__(self, other) -> int | float:
+    def __mul__(self, other):
+        if isinstance(other, (int, float)):
+            def _wrapper(*args):
+                return self.func(*args) * other
+            return self.__class__(_wrapper)
         return quad(self.multed_func(self.func, other.func), self.interval_start, self.interval_end)[0]
+
+    def __add__(self, other):
+        def _wrapper(*args):
+            return self.func + other.func
+        return self.__class__(_wrapper)
+
+    def __call__(self, *args, **kwargs):
+        return self.func(*args, **kwargs)
 
 
 class PIClosedIntervalFunc(ClosedIntervalFunc):

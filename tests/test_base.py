@@ -1,6 +1,6 @@
 import pytest
 
-from base import System, SinCosBaseSystem, PIClosedIntervalFunc
+from base import System, SinCosBasis, PIClosedIntervalFunc
 from math import isclose, pi, sin, cos
 
 
@@ -28,7 +28,7 @@ from math import isclose, pi, sin, cos
 def test_fourier_series_expansion(func, expected):
     digits_num = 3
     epsilon = 10 ** (-digits_num)
-    system = System(SinCosBaseSystem())
+    system = System(SinCosBasis())
     func = PIClosedIntervalFunc(func)
     res = [system.fourier_coefficient(func, i) for i in range(10)]
     err_str = f'Expected: {[round(e, digits_num) for e in expected]}, Actual: {[round(r, digits_num) for r in res]}'

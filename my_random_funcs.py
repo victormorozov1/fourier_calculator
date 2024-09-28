@@ -59,17 +59,17 @@ class Func(ClosedIntervalFunc):
         return Func(_wrapper)
 
 
-from non_ortogonal_system import NonOrthogonalSystem
+from non_ortogonal_system import NonOrthogonalBasis
 
 
-class BaseSystem(NonOrthogonalSystem):
+class Basis(NonOrthogonalBasis):
     def stupid_get_item(self, n: int):
         return Func(study[n])
 
 
 if __name__ == '__main__':
     from base import System
-    system = System(BaseSystem())
+    system = System(Basis())
     func = Func(check[0])
     for i in range(10):
         print(system.fourier_coefficient(func, i))

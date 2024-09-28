@@ -4,13 +4,12 @@ from scipy.integrate import quad
 from typing import Generic, TypeVar
 
 """ 
-Под системой считаю множество элементов, 
-где один из элементов этого множества буду пытаться разложить через базовые элементы
+Под системой понимаю множество элементов, 
+где один из элементов этого множества раскладывается через элементы базиса
 """
 
 """
-Под базовой системой считаю множество элементов,
-по которым буду раскладывать элементы системы
+Под базисом понимаю множество элементов, по которым буду раскладывать элементы системы
 """
 
 
@@ -26,21 +25,20 @@ class SystemObject(ABC):
         pass
 
     def norm(self):
-        # По умолчанию норма будет выводится из произведения, но при желании ее можно определить как угодно
         return sqrt(self * self)
 
 
 SystemObjectType = TypeVar('SystemObjectType', bound=SystemObject)
 
 
-class BaseSystem(Generic[SystemObjectType], ABC):
+class Basis(Generic[SystemObjectType], ABC):
     @abstractmethod
     def __getitem__(self, n: int) -> SystemObjectType:
         pass
 
 
 class System(Generic[SystemObjectType]):
-    def __init__(self, base_system: BaseSystem[SystemObjectType] | list):
+    def __init__(self, base_system: Basis[SystemObjectType] | list):
         self.base_system = base_system
 
     def fourier_coefficient(self, obj: SystemObjectType, n: int) -> int | float:
@@ -82,8 +80,8 @@ class ClosedIntervalFunc(SystemObject, ABC):
         return quad(self.multed_func(self.func, other.func), self.interval_start, self.interval_end)[0]
 
     def __add__(self, other):
-        def _wrapper(*args):
-            return self.func + other.func
+        def _wrapper(*args, **kwargs):
+            return self.func(*args, **kwargs) + other.func(*args, **kwargs)
         return self.__class__(_wrapper)
 
     def __call__(self, *args, **kwargs):
@@ -100,7 +98,7 @@ class PIClosedIntervalFunc(ClosedIntervalFunc):
         return pi
 
 
-class SinCosBaseSystem(BaseSystem[PIClosedIntervalFunc]):
+class SinCosBasis(Basis[PIClosedIntervalFunc]):
     def __getitem__(self, n: int) -> SystemObjectType:
         # 0: cos(0x) = 1
         # 1: sin(x)
@@ -113,7 +111,7 @@ class SinCosBaseSystem(BaseSystem[PIClosedIntervalFunc]):
 
 
 if __name__ == '__main__':
-    system = System(SinCosBaseSystem())
+    system = System(SinCosBasis())
     func = PIClosedIntervalFunc(lambda x: x ** 2 - x ** 4 / 9 + 3 + x)
     for i in range(10):
         print(system.fourier_coefficient(func, i))

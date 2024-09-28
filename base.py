@@ -100,7 +100,7 @@ class PIClosedIntervalFunc(ClosedIntervalFunc):
         return pi
 
 
-class PIClosedIntervalFuncBaseSystem(BaseSystem[PIClosedIntervalFunc]):
+class SinCosBaseSystem(BaseSystem[PIClosedIntervalFunc]):
     def __getitem__(self, n: int) -> SystemObjectType:
         # 0: cos(0x) = 1
         # 1: sin(x)
@@ -113,7 +113,7 @@ class PIClosedIntervalFuncBaseSystem(BaseSystem[PIClosedIntervalFunc]):
 
 
 if __name__ == '__main__':
-    system = System(PIClosedIntervalFuncBaseSystem())
+    system = System(SinCosBaseSystem())
     func = PIClosedIntervalFunc(lambda x: x ** 2 - x ** 4 / 9 + 3 + x)
     for i in range(10):
         print(system.fourier_coefficient(func, i))

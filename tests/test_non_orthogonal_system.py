@@ -1,5 +1,5 @@
-from base import PIClosedIntervalFunc
-from math import isclose, sin, cos
+from base import ClosedIntervalFunc
+from math import isclose, sin, cos, pi
 from non_ortogonal_system import NonOrthogonalBasis
 
 
@@ -11,7 +11,7 @@ class SomeNonOrthogonalBasis(NonOrthogonalBasis):
     ELEMENTS = [lambda x: cos(x), lambda x: sin(x) + cos(x)]
 
     def stupid_get_item(self, n: int):
-        return PIClosedIntervalFunc(self.ELEMENTS[n])
+        return ClosedIntervalFunc(self.ELEMENTS[n], interval_start=-pi, interval_end=pi)
 
 
 def check_func_equal(f1, f2):

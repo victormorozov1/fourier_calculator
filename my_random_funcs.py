@@ -1,6 +1,8 @@
+from functools import partial
 from math import floor
+from typing import Callable
 
-from base import ClosedIntervalFunc, System
+from base import ClosedIntervalFunc, SinCosBasis, System
 from interpolator import LinearInterpolator, Point
 from non_ortogonal_system import NonOrthogonalBasis
 
@@ -38,13 +40,8 @@ check = funcs[1::2]
 
 
 class Func(ClosedIntervalFunc):
-    @property
-    def interval_start(self) -> int | float:
-        return 0
-
-    @property
-    def interval_end(self) -> int | float:
-        return 9.999
+    def __init__(self, func: Callable, **kwargs):
+        super().__init__(func, interval_start=0, interval_end=9.999)
 
     def __sub__(self, other):
         def _wrapper(*args):
@@ -60,19 +57,24 @@ class Basis(NonOrthogonalBasis):
 
 if __name__ == '__main__':
     system = System(Basis())
-    for i, c in enumerate(check[:3]):
-        func = Func(c)
-        fs = system.fourier_sum(func, 6)
+    func = Func(check[0])
+    fs = system.fourier_sum(func, 8)
 
-        import matplotlib.pyplot as plt
-        import numpy as np
+    import matplotlib.pyplot as plt
+    import numpy as np
 
-        x = np.linspace(0, 10, 400)
-        y = [func(xi) for xi in x]
-        plt.plot(x, y, label=f'неповторимый оригинал {i}')
+    x = np.linspace(0, 10, 400)
+    y = [func(xi) for xi in x]
+    plt.plot(x, y, label=f'неповторимый оригинал')
 
-        y2 = [fs(xi) for xi in x]
-        plt.plot(x, y2, label=f'жалкая пародия {i}')
+    y2 = [fs(xi) for xi in x]
+    plt.plot(x, y2, label=f'жалкая пародия')
+
+    sincos_system = System(SinCosBasis(interval_start=0, interval_end=9.999))
+    sincos_fs = sincos_system.fourier_sum(func, 8)
+
+    y3 = [sincos_fs(xi) for xi in x]
+    plt.plot(x, y3, label=f'вообще не то что нужно')
 
     plt.legend()
     plt.show()

@@ -1,10 +1,8 @@
-from functools import partial
-from math import floor
 from typing import Callable
 
-from base import ClosedIntervalFunc, SinCosBasis, System
-from interpolator import LinearInterpolator, Point
-from non_ortogonal_system import NonOrthogonalBasis
+from fur_lib.core.base import ClosedIntervalFunc, System
+from fur_lib.core.non_ortogonal_system import NonOrthogonalBasis
+from fur_lib.utils.interpolator import LinearInterpolator, Point
 
 
 def letter_to_num(c: str) -> int:
@@ -62,8 +60,8 @@ class Basis(NonOrthogonalBasis):
 
 
 system = System(Basis())
-func = Func(get_func(word_to_array('йцуке')))
-fs = system.fourier_sum(func, 5)
+func = Func(get_func(word_to_array('панда')))
+fs = system.fourier_sum(func, 4)
 
 for i in range(5):
     k = fs(i)

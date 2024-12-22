@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 from math import sqrt, pi, sin, cos
-from typing import Callable
-from utils import x_translator
+from typing import Callable, Generic, TypeVar
 
 from scipy.integrate import quad
-from typing import Generic, TypeVar
+
+from fur_lib.utils.utils import x_translator
 
 """ 
 Под системой понимаю множество элементов, 
@@ -65,18 +65,21 @@ class ClosedIntervalFunc(SystemObject, ABC):
     def multed_func(f1, f2):
         def _wrapper(*args):
             return f1(*args) * f2(*args)
+
         return _wrapper
 
     def __mul__(self, other):
         if isinstance(other, (int, float)):
             def _wrapper(*args):
                 return self.func(*args) * other
+
             return self.__class__(_wrapper, interval_start=self.interval_start, interval_end=self.interval_end)
         return quad(self.multed_func(self.func, other.func), self.interval_start, self.interval_end)[0]
 
     def __add__(self, other):
         def _wrapper(*args, **kwargs):
             return self.func(*args, **kwargs) + other.func(*args, **kwargs)
+
         return self.__class__(_wrapper, interval_start=self.interval_start, interval_end=self.interval_end)
 
     def __call__(self, *args, **kwargs):

@@ -1,4 +1,4 @@
-from utils import x_translator
+from fur_lib.utils.utils import x_translator
 
 
 def test_x_translator():

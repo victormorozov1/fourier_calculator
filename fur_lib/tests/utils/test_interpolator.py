@@ -1,6 +1,6 @@
 import pytest
 
-from interpolator import LinearInterpolator, Point
+from fur_lib.utils.interpolator import LinearInterpolator, Point
 
 
 @pytest.mark.parametrize(

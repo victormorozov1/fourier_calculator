@@ -1,6 +1,6 @@
 import pytest
 
-from base import System, SinCosBasis, ClosedIntervalFunc
+from fur_lib.core.base import System, SinCosBasis, ClosedIntervalFunc
 from math import isclose, pi, sin, cos
 
 

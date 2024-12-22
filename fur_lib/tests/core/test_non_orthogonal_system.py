@@ -1,6 +1,7 @@
-from base import ClosedIntervalFunc
 from math import isclose, sin, cos, pi
-from non_ortogonal_system import NonOrthogonalBasis
+
+from fur_lib.core.base import ClosedIntervalFunc
+from fur_lib.core.non_ortogonal_system import NonOrthogonalBasis
 
 
 DIGITS_NUM = 3

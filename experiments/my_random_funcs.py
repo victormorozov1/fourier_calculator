@@ -1,10 +1,8 @@
-from functools import partial
-from math import floor
 from typing import Callable
 
-from base import ClosedIntervalFunc, SinCosBasis, System
-from interpolator import LinearInterpolator, Point
-from non_ortogonal_system import NonOrthogonalBasis
+from fur_lib.core.base import ClosedIntervalFunc, SinCosBasis, System
+from fur_lib.core.non_ortogonal_system import NonOrthogonalBasis
+from fur_lib.utils.interpolator import LinearInterpolator, Point
 
 # Какие-то данные функции
 a = [

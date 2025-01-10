@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Generic
 
-from fur_lib.core.base import Basis, SystemObjectType
+from fur_lib.core.typing import Basis, SystemObjectType
 
 
 class NonOrthogonalBasis(Generic[SystemObjectType], Basis[SystemObjectType], ABC):

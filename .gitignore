@@ -3,3 +3,5 @@ __pycache__
 tests/.pytest_cache
 .pytest_cache
 venv
+htmlcov
+.coverage

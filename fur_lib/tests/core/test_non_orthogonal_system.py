@@ -1,8 +1,8 @@
-from math import isclose, sin, cos, pi
+from math import sin, cos, pi
 
-from fur_lib.core.base import ClosedIntervalFunc
+from fur_lib.core.closed_interval_func import ClosedIntervalFunc
 from fur_lib.core.non_ortogonal_system import NonOrthogonalBasis
-
+from fur_lib.tests.core.utils import check_func_equal
 
 DIGITS_NUM = 3
 EPSILON = 10 ** (-DIGITS_NUM)
@@ -13,11 +13,6 @@ class SomeNonOrthogonalBasis(NonOrthogonalBasis):
 
     def stupid_get_item(self, n: int):
         return ClosedIntervalFunc(self.ELEMENTS[n], interval_start=-pi, interval_end=pi)
-
-
-def check_func_equal(f1, f2):
-    for i in [0, -5, 10, 15, 100]:
-        assert isclose(f1(i), f2(i), abs_tol=EPSILON)
 
 
 def test_fourier_series_expansion():

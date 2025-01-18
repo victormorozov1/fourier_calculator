@@ -2,10 +2,7 @@ import operator
 from functools import partial
 from typing import Callable
 
-from typeguard import typechecked
 
-
-# @typechecked
 def _helper(op: Callable, f1: Callable, f2: Callable) -> Callable:
     return lambda *args, **kwargs: op(f1(*args, **kwargs), f2(*args, **kwargs))
 

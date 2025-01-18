@@ -1,7 +1,9 @@
 from typing import Callable
 
-from fur_lib.core.base import ClosedIntervalFunc, System
+from fur_lib.core.closed_interval_func import ClosedIntervalFunc
 from fur_lib.core.non_ortogonal_system import NonOrthogonalBasis
+from fur_lib.core.rounding_system import RoundingSystem
+from fur_lib.core.system import System
 from fur_lib.utils.interpolator import LinearInterpolator, Point
 
 
@@ -59,10 +61,10 @@ class Basis(NonOrthogonalBasis):
         return Func(funcs[n])
 
 
-system = System(Basis())
-func = Func(get_func(word_to_array('панда')))
-fs = system.fourier_sum(func, 4)
+system = RoundingSystem(2, Basis())
+func = Func(get_func(word_to_array('йцуке')))
+fs = system.fourier_sum(func, 5)
 
 for i in range(5):
     k = fs(i)
-    print(num_to_letter(k), k)
+    print(num_to_letter(k), k, system.fourier_coefficient(func, i))

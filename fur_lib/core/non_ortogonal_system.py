@@ -1,7 +1,8 @@
+import logging
 from abc import ABC, abstractmethod
 from typing import Generic
 
-from fur_lib.core.typing import Basis, SystemObjectType
+from fur_lib.core.basis import Basis, SystemObjectType
 
 
 class NonOrthogonalBasis(Generic[SystemObjectType], Basis[SystemObjectType], ABC):
@@ -12,6 +13,13 @@ class NonOrthogonalBasis(Generic[SystemObjectType], Basis[SystemObjectType], ABC
     С помощью этого класса можно собрать базис из неортогональных элементов,
     из которых будет собрана ортогональная система
     """
+
+    def __init__(self, *args, eps: float = 10 ** -5, max_shift_len: int = 20 ** 2, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._basis = []
+        self._shift = 0
+        self._eps = eps
+        self._max_shift_len = max_shift_len
 
     @staticmethod
     def projection(obj1: SystemObjectType, obj2: SystemObjectType):
@@ -27,7 +35,21 @@ class NonOrthogonalBasis(Generic[SystemObjectType], Basis[SystemObjectType], ABC
         pass
 
     def __getitem__(self, n: int):
-        el = self.stupid_get_item(n)
-        for i in range(n):
-            el = self.exclude(el, self[i])
-        return el
+        while_iterations = 0
+        while len(self._basis) <= n:
+
+            while_iterations += 1
+            if while_iterations > 1000 and while_iterations % 1000 == 0:
+                logging.warning(f'При получении {n}-ного элемента базиса уже {while_iterations} элементов занулилось')
+
+            el = self.stupid_get_item(len(self._basis) + self._shift)
+            for basis_el in self._basis:
+                el = self.exclude(el, basis_el)
+
+            # Околонулевые элементы могут создавать сильную погрешность при вычислениях, поэтому их не берем
+            if el * el > self._eps:
+                self._basis.append(el)
+            else:
+                self._shift += 1
+
+        return self._basis[n]

@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+import logging
 from typing import Generic
 
-from fur_lib.core.typing import Basis, SystemObjectType
+from fur_lib.core.basis import Basis, SystemObjectType
 
 
 class System(Generic[SystemObjectType]):
@@ -14,14 +15,24 @@ class System(Generic[SystemObjectType]):
     def __init__(self, basis: Basis[SystemObjectType]):
         self.basis = basis
 
-    def fourier_coefficient(self, obj: SystemObjectType, n: int) -> int | float:
+    def fourier_coefficient(self, obj: SystemObjectType, n: int, eps: float = 0.0001) -> int | float:
         base_obj = self.basis[n]
-        return (obj * base_obj) / (base_obj * base_obj)
+        a = obj * base_obj
+        b = base_obj * base_obj
+
+        # хз зчем я это добавлял. Может и правда нужно. Но один раз эта хуета испортила мне все, так что пока комменчу
+        # if a < eps:
+        #     logging.warning('Обнаружен МАЛЕНЬКИЙ ЧЛЕН ряда. Во избежание погрешностей он будет занулен')
+        #     return 0
+
+        return a / b
 
     def fourier_sum(self, obj: SystemObjectType, n: int) -> SystemObjectType:
-        summ = self.basis[0] * self.fourier_coefficient(obj, 0)
+        k = self.fourier_coefficient(obj, 0)
+        summ = self.basis[0] * k
         for i in range(1, n):
-            summ = summ + self.basis[i] * self.fourier_coefficient(obj, i)
+            k = self.fourier_coefficient(obj, i)
+            summ = summ + self.basis[i] * k
         return summ
 
 

@@ -5,3 +5,4 @@ tests/.pytest_cache
 venv
 htmlcov
 .coverage
+draft.py

@@ -10,7 +10,9 @@ class SinCosBasis(Basis):
             self,
             interval_start: int | float = -pi,
             interval_end: int | float = pi,
+
             # TODO: тут неточный тупинг, SystemObjectType может не иметь interval_start, interval_end
+            # TODO: sys_obj_type всегда должен быть ClosedIntervalFunc. Но сейчас __mul__ зашит в SystemObjectType, поэтому для использования разных способов умножения приходится производить разные функции. Но по факту одну и ту-же функцию можно умножать разными способами, то есть у функции не должно быть строго зафиксированного и единственного __mul__
             sys_obj_type: type[SystemObjectType] = ClosedIntervalFunc,
     ):
         self.interval_start = interval_start

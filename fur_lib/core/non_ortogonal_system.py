@@ -47,9 +47,11 @@ class NonOrthogonalBasis(Generic[SystemObjectType], Basis[SystemObjectType], ABC
                 el = self.exclude(el, basis_el)
 
             # Околонулевые элементы могут создавать сильную погрешность при вычислениях, поэтому их не берем
-            if el * el > self._eps:
+            p = el * el
+            if p > self._eps:
                 self._basis.append(el)
             else:
                 self._shift += 1
+                logging.warning(f'element {el} excluded from basis, {p}')
 
         return self._basis[n]

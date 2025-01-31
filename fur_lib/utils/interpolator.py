@@ -9,7 +9,9 @@ class Point:
 
 
 class BaseInterpolator(ABC):
-    def __init__(self, data: list[Point]):
+    def __init__(self, data: list[Point] | list[int | float]):
+        if not isinstance(data[0], Point):
+            data = [Point(x, y) for x, y in enumerate(data)]
         self.data = data
 
     @abstractmethod

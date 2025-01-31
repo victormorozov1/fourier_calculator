@@ -1,6 +1,6 @@
 from typing import Callable
 
-from fur_lib.core.closed_interval_func import ClosedIntervalFunc
+from fur_lib.core.func import Func
 from fur_lib.core.non_ortogonal_system import NonOrthogonalBasis
 from fur_lib.core.rounding_system import RoundingSystem
 from fur_lib.core.system import System
@@ -43,17 +43,6 @@ def get_func(arr: list[int]) -> Callable:
 funcs = []
 for y_values in words_num_basis:
     funcs.append(get_func(y_values))
-
-
-class Func(ClosedIntervalFunc):
-    def __init__(self, func: Callable, **kwargs):
-        super().__init__(func, interval_start=0, interval_end=4)
-
-    def __sub__(self, other):
-        def _wrapper(*args):
-            return self.func(*args) - other.func(*args)
-
-        return Func(_wrapper)
 
 
 class Basis(NonOrthogonalBasis):

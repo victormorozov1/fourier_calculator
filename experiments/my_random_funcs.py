@@ -1,6 +1,6 @@
 from typing import Callable
 
-from fur_lib.core.base import ClosedIntervalFunc, SinCosBasis, System
+from fur_lib.core.base import Func, SinCosBasis, System
 from fur_lib.core.non_ortogonal_system import NonOrthogonalBasis
 from fur_lib.utils.interpolator import LinearInterpolator, Point
 
@@ -35,17 +35,6 @@ for y_values in a:
 
 study = funcs[::2]
 check = funcs[1::2]
-
-
-class Func(ClosedIntervalFunc):
-    def __init__(self, func: Callable, **kwargs):
-        super().__init__(func, interval_start=0, interval_end=9.999)
-
-    def __sub__(self, other):
-        def _wrapper(*args):
-            return self.func(*args) - other.func(*args)
-
-        return Func(_wrapper)
 
 
 class Basis(NonOrthogonalBasis):

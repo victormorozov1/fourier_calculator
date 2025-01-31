@@ -1,12 +1,13 @@
-from math import ceil, floor
+from math import floor
 import matplotlib.pyplot as plt
 import numpy as np
 
 from fur_lib.core.non_ortogonal_system import NonOrthogonalBasis
 from fur_lib.core.sin_cos_basis import SinCosBasis
 from fur_lib.core.system import System
-from fur_lib.experimental_additions.simple_closed_interval_func import SimpleClosedIntervalFunc
-from fur_lib.core.closed_interval_func import ClosedIntervalFunc
+from fur_lib.experimental_additions.simple_closed_interval_func import SimpleFunc
+from fur_lib.core.func import Func
+from fur_lib.core.dot_product import vector_product
 
 
 class OrtSinCosBasis(NonOrthogonalBasis, SinCosBasis):
@@ -22,10 +23,10 @@ def floor_ceil(x: float) -> tuple[int, int]:
 
 if __name__ == '__main__':
     start, end = 0, 4
-    basis = OrtSinCosBasis(interval_start=start, interval_end=end, )
-    basis2 = OrtSinCosBasis(interval_start=start, interval_end=end , sys_obj_type=SimpleClosedIntervalFunc)
-    system = System(basis)
-    system2 = System(basis2)
+    basis = OrtSinCosBasis(interval_start=start, interval_end=end, dot_product=vector_product)
+    basis2 = OrtSinCosBasis(interval_start=start, interval_end=end, dot_product=vector_product)
+    system = System(basis, dot_product=vector_product)
+    system2 = System(basis2, dot_product=vector_product())
     lst = [1, 5, 3, 0, 9]
 
     def f(_x, eps=10**-5):
@@ -37,8 +38,8 @@ if __name__ == '__main__':
         return lst[l] * (r - _x) + lst[r] * (_x - l)
 
 
-    func = ClosedIntervalFunc(f, interval_start=start, interval_end=end)
-    func2 = SimpleClosedIntervalFunc(f, interval_start=start, interval_end=end)
+    func = Func(f)
+    func2 = SimpleFunc(f)
     fs = system.fourier_sum(func, 4)
     fs2 = system2.fourier_sum(func2, 4)
 

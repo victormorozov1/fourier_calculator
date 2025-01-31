@@ -1,10 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Generic, TypeVar
+from typing import Generic
 
-from fur_lib.core.system_object import SystemObject
-from fur_lib.core.typing import SupportsGetItem
-
-SystemObjectType = TypeVar('SystemObjectType', bound=SystemObject)
+from fur_lib.core.typing import SystemObjectType
 
 
 class Basis(Generic[SystemObjectType], ABC):
